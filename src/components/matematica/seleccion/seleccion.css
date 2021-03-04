@@ -1,0 +1,23 @@
+.header-seleccion{
+    margin: 0px !important;
+    width:100%;
+    border-radius: 7px;
+    border:1px solid rgb(17, 46, 99);
+}
+
+.opcionSeleccion{
+    width:100%;
+    background-color: rgb(36, 80, 161);
+    cursor:pointer;
+}
+
+.opcionSeleccion:hover{
+    width:100%;
+    background-color: rgb(31, 66, 133);
+    cursor:pointer;
+}
+
+.operacionesSeleccion{
+    width:100%;
+    margin: 2rem 0px !important;
+}
