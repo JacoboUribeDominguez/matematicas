@@ -42,7 +42,7 @@ const Aleatorio = () => {
         e.preventDefault();
         if(multiplicacionActivo){
             if(parseInt(respuesta) === (multiplicacionNum1 * multiplicacionNum2)){
-                setRespuesta(0);
+                setRespuesta('');
                 setMultiplicacion({
                     multiplicacionActivo : false,
                     multiplicacionNum1 : 0,
@@ -56,8 +56,12 @@ const Aleatorio = () => {
                 setCorrecto(false);
             }
         } else if (divisionActivo) {
-            if(parseInt(respuesta) === parseFloat(divisionNum1 / divisionNum2) || parseFloat(respuesta).toFixed(2) === parseFloat(divisionNum1 / divisionNum2).toFixed(2)){
-                setRespuesta(0);
+            let nRespuesta = parseFloat(respuesta).toFixed(2);
+            let nRespuestaCorrecta = parseFloat(divisionNum1 / divisionNum2).toFixed(2)
+            console.log(nRespuesta)
+            console.log(nRespuestaCorrecta)
+            if(nRespuesta === nRespuestaCorrecta){
+                setRespuesta('');
                 setDivision({
                     divisionActivo : false,
                     divisionNum1 : 0,
