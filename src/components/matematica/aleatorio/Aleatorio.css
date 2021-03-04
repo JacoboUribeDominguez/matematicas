@@ -1,0 +1,11 @@
+.width-100{
+    width:100%;
+}
+ 
+.bg-blanco{
+    background-color: white;
+}
+
+.bg-incorrecto{
+    background-color: rgb(204, 70, 70);
+}

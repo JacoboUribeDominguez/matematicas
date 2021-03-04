@@ -1,0 +1,14 @@
+.header-container{
+    background-color: rgb(32, 88, 172);
+}
+
+.list-header{
+    padding:1rem;
+    list-style: none;
+    margin-bottom: 5rem;
+}
+
+.li-opcion:hover{
+    cursor: pointer;
+    color:rgb(170, 169, 169);
+}
