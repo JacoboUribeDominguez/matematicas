@@ -12,49 +12,81 @@ const Aleatorio = () => {
         multiplicacionEquivocado : false
     });
 
+    const [division, setDivision] = useState({
+        divisionActivo : false,
+        divisionNum1 : 0,
+        divisionNum2 : 0,
+        divisionRespuesta : 0,
+        divisionEquivocado : false
+    });
+
     const [respuesta, setRespuesta] = useState(0);
-    const [correcta, setCorrecto] = useState(true);
+    const [correcto, setCorrecto] = useState(true);
 
     const { multiplicacionActivo, multiplicacionNum1, multiplicacionNum2, multiplicacionRespuesta, multiplicacionEquivocado } = multiplicacion;
+    const { divisionActivo, divisionNum1, divisionNum2, divisionRespuesta, divisionEquivocado } = division;
 
     const onChange = (e) => {
-        setRespuesta(e.target.value)
+
+        const valoresValidos = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '', '.'];
+
+        const { value } = e.target
+
+        if(valoresValidos.find(element => element === value[value.length-1])){
+            setRespuesta(value)
+        }
+        setRespuesta(value)
     } 
 
     const toggleSubmit = (e) => {
-        e.preventDefault()
-        if(respuesta === multiplicacionRespuesta){
-            alert('bien')
-            setMultiplicacion({
-                multiplicacionActivo : false,
-                multiplicacionNum1 : 0,
-                multiplicacionNum2 : 0,
-                multiplicacionRespuesta : 0,
-                multiplicacionEquivocado : false
-            })
+        e.preventDefault();
+        if(multiplicacionActivo){
+            if(parseInt(respuesta) === (multiplicacionNum1 * multiplicacionNum2)){
+                setRespuesta(0);
+                setMultiplicacion({
+                    multiplicacionActivo : false,
+                    multiplicacionNum1 : 0,
+                    multiplicacionNum2 : 0,
+                    multiplicacionRespuesta : 0,
+                    multiplicacionEquivocado : false
+                });
+                setCorrecto(true);
+                toggleClick();
+            } else {
+                setCorrecto(false);
+            }
+        } else if (divisionActivo) {
+            if(parseInt(respuesta) === parseFloat(divisionNum1 / divisionNum2) || parseFloat(respuesta).toFixed(2) === parseFloat(divisionNum1 / divisionNum2).toFixed(2)){
+                setRespuesta(0);
+                setDivision({
+                    divisionActivo : false,
+                    divisionNum1 : 0,
+                    divisionNum2 : 0,
+                    divisionRespuesta : 0,
+                    divisionEquivocado : false
+                })
+                setCorrecto(true);
+                toggleClick();
+            } else {
+                setCorrecto(false);
+            }
         } else {
-            setCorrecto(false);
+            alert('hubo un error inesperado')
         }
+        
     }
 
     const toggleClick = () => {
         //numero aleatorio que defina los problemas multiplicación y división
         const operacion = Math.floor(Math.random() * (3 - 1)) + 1;
 
-        setMultiplicacion({
-            multiplicacionActivo : false,
-            multiplicacionNum1 : 0,
-            multiplicacionNum2 : 0,
-            multiplicacionRespuesta : 0,
-            multiplicacionEquivocado : false
-        })
-
+        let num1, num2, respuesta;
         switch(operacion){
             case 1:
                 //numeros aleatorios en la multiplicación
-                const num1 = Math.floor(Math.random() * (16 - 3)) + 3;
-                const num2 = Math.floor(Math.random() * (16 - 3)) + 3;
-                const respuesta = num1 * num2;
+                num1 = Math.floor(Math.random() * (16 - 3)) + 3;
+                num2 = Math.floor(Math.random() * (16 - 3)) + 3;
+                respuesta = num1 * num2;
                 setMultiplicacion({
                     ...multiplicacion,
                     multiplicacionActivo : true,
@@ -66,9 +98,20 @@ const Aleatorio = () => {
 
             case 2:
                 //numeros aleatorios en caso de division
+                num1 = Math.floor(Math.random() * (16 - 3)) + 3;
+                num2 = Math.floor(Math.random() * ((num1-1) - 3)) + 3;
+                respuesta = num1 * num2;
+                setDivision({
+                    ...division,
+                    divisionActivo : true,
+                    divisionNum1 : num1,
+                    divisionNum2 : num2,
+                    divisionRespuesta : respuesta
+                })
                 break;
 
             default:
+                alert('hubo un error inesperado')
                 break;
         }
 
@@ -83,7 +126,6 @@ const Aleatorio = () => {
                 Comprobar operación
             </Button>
             {
-                multiplicacionActivo ? (
                     <div 
                         className="d-flex 
                             justify-content-center 
@@ -94,27 +136,47 @@ const Aleatorio = () => {
                             my-5
                             contenedor-multiplicacion">
                         <div className="width-100 text-center">
-                            {multiplicacionNum1}
+                            {multiplicacionActivo ? multiplicacionNum1 : divisionNum1}
                         </div>
                         <div className="width-100 text-center">
-                            x
+                            {multiplicacionActivo ? 'x' : '/'}
                         </div>
                         <div className="width-100 text-center">
-                            {multiplicacionNum2}
+                            {multiplicacionActivo ? multiplicacionNum2 : divisionNum2}
                         </div>
-                        <form className="width-100" onSubmit={() => toggleSubmit()}>
+                        <div className="text-center">
+                            {multiplicacionActivo ? null : 'Si es decimal puede ser con 2 digitos después de la coma, ej : 2.00'}
+                        </div>
+                        <form className="width-100" onSubmit={toggleSubmit}>
                             <div>
-                                <input 
-                                    type="number" 
-                                    className={correcta ? 'bg-blanco' : 'bg-incorrecto'}
-                                    value={respuesta}
-                                    onChange={onChange}
-                                    style={{
-                                        marginTop:'1.3rem',
-                                        border:'none',
-                                        width:'3rem',
-                                        height:'2.3rem'
-                                    }}/>
+                                {
+                                    correcto ? (
+                                        <input 
+                                            type="text" 
+                                            value={respuesta}
+                                            onChange={onChange}
+                                            style={{
+                                                marginTop:'1.3rem',
+                                                border:'none',
+                                                width:'3rem',
+                                                height:'2.3rem',
+                                                backgroundColor: 'white'
+                                            }}/>
+                                    ) : (
+                                        <input 
+                                            type="text" 
+                                            value={respuesta}
+                                            onChange={onChange}
+                                            style={{
+                                                marginTop:'1.3rem',
+                                                border:'none',
+                                                width:'3rem',
+                                                height:'2.3rem',
+                                                backgroundColor: 'rgb(204, 70, 70)'
+                                            }}/>
+                                    )
+                                }
+                                
                                 <button 
                                     style={{
                                         border:'none',
@@ -129,9 +191,6 @@ const Aleatorio = () => {
                             </div>
                         </form>
                     </div>
-                ) : (
-                    null
-                )
             }
 
         </div>
